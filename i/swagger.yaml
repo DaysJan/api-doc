@@ -1,0 +1,269 @@
+swagger: '2.0'
+info:
+  description: >-
+    新版管理页
+  version: 1.0.1
+  title: Landlord Cross
+# host: 'anjuke.com'
+# basePath: /landlord/cross/
+schemes:
+  - https
+
+paths:
+  /manage/skuDetailInfo:
+    get:
+      summary: '获取房东 SKU 房源基本信息'
+      description: 'SKU主状态、小区名、楼栋户室号、基础信息、认证信息、视频信息、业主说、安心卖'
+      produces:
+        - application/json
+      parameters:
+        - name: sku_house_id
+          in: query
+          description: 房东SKU房源标准库ID
+          type: string
+          required: true
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/SkuDetailResponse'
+            
+            
+definitions:
+  SkuDetail:
+    type: object
+    properties:
+      headers:
+        description: '头部全局提醒'
+        type: array
+        items:
+          $ref: '#/definitions/Header'
+      business_type:
+        description: '业务类型枚举(1:委托 2:直发 6:SKU)'
+        type: integer
+        format: int8
+        enum: 
+          - 1
+          - 2
+          - 6
+      community_name:
+        description: '小区名字'
+        type: string
+        example: '海利康泰景园'
+      location:
+        description: '楼栋户室号'
+        type: string
+        example: '3栋5单元606室'
+      house_id:
+        description: '房源编号'
+        type: string
+        example: '1234560123456789'
+      expected_total_price:
+        description: '期望总价'
+        type: string
+        example: '651'
+      expected_unit_price:
+        description: '期望单价'
+        type: string
+        example: ' 5555'
+      assessed_total_price:
+        description: '估价总价'
+        type: string
+        example: '629'
+      assessed_unit_price:
+        description: '估价单价'
+        type: string
+        example: '5560'
+      assessed_action:
+        description: '估价单价'
+        type: string
+        example: 'openajk://'
+      trend_price_change:
+        description: '价格趋势数值'
+        type: string
+        example: '-4'
+      trend_price_time:
+        description: '价格趋势时间段'
+        type: string
+        example: '近30天'
+      info_sheet:
+        description: '认证信息、基础信息、视频信息、业主说'
+        type: array
+        items:
+          $ref: '#/definitions/InfoRow'
+        example:
+          - title: '认证信息'
+            type: 'AUTH_INFO'
+            desc: '完成实名和房本认证后房源才可以出售'
+            btn_text: '认证'
+            btn_action: ''
+            step: 'HOUSE_CERT'
+            state: 'FAIL'
+            labels:
+              - '实名认证'
+          - title: '基础信息'
+            type: 'BASIC_INFO'
+            desc: '3室2厅1卫，100m²，2/6层，精装修'
+            btn_text: '编辑'
+            btn_action: ''
+            step: ''
+            state: 'TODO'
+            labels: []
+          - title: '视频信息'
+            type: 'VIDEO_INFO'
+            desc: '用视频全方位展示房源，加速出售'
+            btn_text: '上传'
+            btn_action: ''
+            step: ''
+            state: 'TODO'
+            labels: []
+          - title: '业主说'
+            type: 'LANDLORD_INTRO'
+            desc: '填写房源亮点，有助于成交'
+            btn_text: '填写'
+            btn_action: ''
+            step: ''
+            state: 'TODO'
+            labels: []
+      protection_status:
+        description: '安心卖状态枚举 1:保险中 2:待保险 3:不展示保险'
+        type: integer
+        format: int8
+        enum:
+          - 1
+          - 2
+          - 3
+      delete_reasons:
+        description: '删除房源的原因(101:房子不想卖了, 106:观望市场 以后再说, 107:经纪人服务质量差, 108:房子已经卖掉了, 199:其他)'
+        type: array
+        items:
+          $ref: '#/definitions/DeleteReason'
+          
+  Header:
+    type: object
+    properties:
+      type:
+        description: '类型'
+        type: string
+        enum:
+          - 'INFO'
+          - 'ERROR'
+        example: 'ERROR'
+      desc:
+        description: '描述文案'
+        type: string
+        example: '房源过期啦，请重新上架'
+      btn_text:
+        description: '按钮文案'
+        type: string
+        example: '重新上架'
+      btn_api_name:
+        description: '要执行的接口名（接口 url 最后一个“/”后的部分）'
+        type: string
+        example: 'upDirect'
+      btn_action:
+        description: '要执行的事件名'
+        type: string
+        enum: 
+          - GOV_VERIFY
+        
+  InfoRow:
+    type: object
+    properties:
+      title:
+        description: '标题'
+        type: string
+        example: '认证信息'
+      type:
+        description: '类型'
+        type: string
+        enum: 
+          - 'AUTH_INFO'
+          - 'BASIC_INFO'
+          - 'VIDEO_INFO'
+          - 'LANDLORD_INTRO'
+      desc:
+        description: '描述'
+        type: string
+        example: '房本拍的太模福呢'
+      btn_text:
+        description: '按钮文案'
+        type: string
+        example: '重新认证'
+      btn_action:
+        description: '按钮链接'
+        type: string
+        example: ''
+      step:
+        description: '步骤'
+        type: string
+        enum:
+          - 'REAL_NAME'
+          - 'HOUSE_CERT'
+          - 'ALL_DONE'
+        example: 'HOUSE_CERT'
+      state:
+        description: '状态'
+        type: string
+        enum: 
+          - 'TODO'
+          - 'DOING'
+          - 'FAIL'
+          - 'SUCCESS'
+        example: 'FAIL'
+      labels:
+        description: '标签array'
+        type: array
+        items:
+          description: '标签'
+          type: string
+          example: '实名认证'
+          
+  DeleteReason:
+    type: object
+    properties:
+      code:
+        description: 'code'
+        type: integer
+        format: int32
+        enum:
+          - 101
+          - 106
+          - 107
+          - 108
+          - 199
+      desc:
+        description: '描述'
+        type: string
+        enum:
+          - '房子不想卖了'
+          - '观望市场 以后再说'
+          - '经纪人服务质量差'
+          - '房子已经卖掉了'
+          - '其他'
+
+  SkuDetailResponse:
+    allOf:
+      - $ref: '#/definitions/ApiResponse'
+      - type: object
+        properties:
+          data:
+            $ref: '#/definitions/SkuDetail'
+
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: string
+        example: "0"
+      msg:
+        type: string
+        example: "ok"
+      data:
+        type: object
+    required:
+    - code
+    - msg
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /58corp.com/SkuDetail/1.0.1
