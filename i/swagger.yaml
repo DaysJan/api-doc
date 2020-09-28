@@ -133,6 +133,10 @@ definitions:
           - 1
           - 2
           - 3
+      forbidden_toast:
+        description: '禁止操作的 toast'
+        type: string
+        example: '房产违规，无法修改信息，请删除后重新发布'
       delete_reasons:
         description: '删除房源的原因(101:房子不想卖了, 106:观望市场 以后再说, 107:经纪人服务质量差, 108:房子已经卖掉了, 199:其他)'
         type: array
@@ -157,15 +161,12 @@ definitions:
         description: '按钮文案'
         type: string
         example: '重新上架'
-      btn_api_name:
-        description: '要执行的接口名（接口 url 最后一个“/”后的部分）'
-        type: string
-        example: 'upDirect'
       btn_action:
         description: '要执行的事件名'
         type: string
         enum: 
           - GOV_VERIFY
+          - RESHOW
         
   InfoRow:
     type: object
